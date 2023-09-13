@@ -1,0 +1,26 @@
+1) Functional programming treats programs as expression evaluations while imperative programming treats programs as a way to change the value of variables.
+
+2) Tail recursion is a recursive function where the recursive function is the last statement executed by the function. No additional work is done after a recursive call.
+
+3) Currying passes in parameters 1 at a time (let f(x1)(x2)(x3)...(xn)) while tupling passes in all parameters within 1 tuple (let f(x1, x2, x3, ... xn))
+
+4) 
+let is_palindrome(str: string): bool =
+    let len = string_length(str) in
+    let rec is_palindrome_helper(left: int)(right: int): bool=
+      if left >= right then true
+      else if string_get_at(str)(left) <> string_get_at(str)(right) then false
+      else is_palindrome_helper(left + 1)(right - 1)
+  in
+  is_palindrome_helper(0)(len - 1)
+
+5)
+let sum_of_squares(n: int): int = 
+    let rec helper(i: int)(acc: int): int = 
+        if i <= 0 then acc
+        else helper(i - 1)(acc + (i*i))
+    in
+    helper(n)(0)
+
+
+# Remember to use Hongwei's functions rather than standard lib functions
