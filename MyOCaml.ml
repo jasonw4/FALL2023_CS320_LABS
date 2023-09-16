@@ -137,21 +137,11 @@ let string_tolower(cs: string): string =
 
 (* ****** ****** *)
 
-let
-string_foreach
-(cs: string)
-(work: char -> unit) =
-int1_foreach
-(string_length(cs))
-(fun i0 -> work(string_get_at(cs)(i0)))
+let string_foreach(cs: string)(work: char -> unit) =
+  int1_foreach(string_length(cs))(fun i0 -> work(string_get_at(cs)(i0)))
 
-let
-string_rforeach
-(cs: string)
-(work: char -> unit) =
-int1_rforeach
-(string_length(cs))
-(fun i0 -> work(string_get_at(cs)(i0)))
+let string_rforeach(cs: string)(work: char -> unit) =
+  int1_rforeach(string_length(cs))(fun i0 -> work(string_get_at(cs)(i0)))
 
 (* ****** ****** *)
 
@@ -160,258 +150,165 @@ string_tabulate = String.init
 ;;
 (* ****** ****** *)
 
-let
-list_arrnize
-(xs: 'a list): 'a array = Array.of_list(xs)
+let list_arrnize(xs: 'a list): 'a array = 
+  Array.of_list(xs)
 
 (* ****** ****** *)
 
-let rec
-list_revapp
-(xs: 'a list)
-(ys: 'a list): 'a list =
-match xs with
-| [] -> ys
-| x1 :: xs -> list_revapp(xs)(x1 :: ys)
+let rec list_revapp(xs: 'a list)(ys: 'a list): 'a list =
+  match xs with
+  | [] -> ys
+  | x1 :: xs -> list_revapp(xs)(x1 :: ys)
 
-let
-list_reverse
-(xs: 'a list): 'a list = list_revapp(xs)([])
+let list_reverse(xs: 'a list): 'a list = 
+  list_revapp(xs)([])
 
 (* ****** ****** *)
 
-let rec
-list_forall
-(xs: 'a list)
-(test: 'a -> bool): bool =
-(
-match xs with
-| [] -> true
-| x1 :: xs ->
-(
-  test(x1) && list_forall(xs)(test)))
+let rec list_forall(xs: 'a list)(test: 'a -> bool): bool =
+( match xs with
+  | [] -> true
+  | x1 :: xs -> (test(x1) && list_forall(xs)(test))
+)
 
-let rec
-list_exists
-(xs: 'a list)
-(test: 'a -> bool): bool =
-(
-match xs with
-| [] -> false
-| x1 :: xs ->
-(
-  test(x1) || list_exists(xs)(test)))
+let rec list_exists(xs: 'a list)(test: 'a -> bool): bool =
+( match xs with
+  | [] -> false
+  | x1 :: xs -> (test(x1) || list_exists(xs)(test))
+)
 
 (* ****** ****** *)
 
-let rec
-list_foreach
-(xs: 'a list)
-(work: 'a -> unit): unit =
-(
-match xs with
-| [] -> ()
-| x1 :: xs ->
-(
-  work(x1); list_foreach(xs)(work)))
+let rec list_foreach(xs: 'a list)(work: 'a -> unit): unit =
+( match xs with
+  | [] -> ()
+  | x1 :: xs -> (work(x1); list_foreach(xs)(work))
+)
 ;;
 
-let rec
-list_rforeach
-(xs: 'a list)
-(work: 'a -> unit): unit =
-list_foreach(list_reverse(xs))(work)
+let rec list_rforeach(xs: 'a list)(work: 'a -> unit): unit =
+  list_foreach(list_reverse(xs))(work)
 ;;
 
 (* ****** ****** *)
 (* ****** ****** *)
 (* ****** ****** *)
 
-let
-forall_to_foreach
-( forall
-: ('xs, 'x0) forall): ('xs, 'x0) foreach =
-fun(xs)(work) ->
-let _ =
-  forall(xs)(fun(x0) -> (work(x0); true)) in ()
+let forall_to_foreach(forall: ('xs, 'x0) forall): ('xs, 'x0) foreach =
+  fun(xs)(work) -> 
+    let _ = forall(xs)(fun(x0) -> (work(x0); true)) in 
+    ()
 ;;
 (* ****** ****** *)
 
-let
-foreach_to_forall
-( foreach
-: ('xs, 'x0) foreach): ('xs, 'x0) forall =
-fun(xs)(test) ->
-try
-let
-() = foreach(xs)
-(
-fun(x0) ->
-if test(x0) then () else raise False)
-in
-  ( true )
-with False(*void*) -> (false) 
+let foreach_to_forall(foreach: ('xs, 'x0) foreach): ('xs, 'x0) forall =
+  fun(xs)(test) ->
+    try 
+      let () = foreach(xs)(fun(x0) -> if test(x0) then () else raise False) in
+      ( true )
+    with 
+      False(*void*) -> (false) 
 ;;(* end of [foreach_to_forall]: let *)
 
 (* ****** ****** *)
 
-let
-foreach_to_foldleft
-( foreach
-: ('xs, 'x0) foreach)
-: 'xs -> 'r0 -> ('r0 -> 'x0 -> 'r0) -> 'r0 =
-fun
-(xs)(r0)(fopr) ->
-let
-res = ref(r0) in
-foreach(xs)
-(fun(x0) -> res := fopr(!res)(x0)); !res
+let foreach_to_foldleft(foreach: ('xs, 'x0) foreach): 'xs -> 'r0 -> ('r0 -> 'x0 -> 'r0) -> 'r0 =
+  fun (xs)(r0)(fopr) -> 
+    let res = ref(r0) in
+    foreach(xs)(fun(x0) -> res := fopr(!res)(x0)); 
+    !res
 ;;(* end of [foreach_to_foldleft]: let *)
 
 (* ****** ****** *)
 
-let rec
-foreach_to_map_list
-( foreach
-: ('xs, 'x0) foreach)
-: ('xs, 'x0, 'y0) map_list =
-fun(xs)(fopr) ->
-list_reverse
-(foreach_to_map_rlist(foreach)(xs)(fopr))
-
-and
-foreach_to_map_rlist
-( foreach
-: ('xs, 'x0) foreach)
-: ('xs, 'x0, 'y0) map_rlist =
-fun
-(xs)(fopr) ->
-let
-res = ref([]) in
-foreach(xs)
-(fun(x0) -> res := fopr(x0) :: !res); !res
+let rec foreach_to_map_list(foreach: ('xs, 'x0) foreach): ('xs, 'x0, 'y0) map_list =
+  fun(xs)(fopr) ->
+    list_reverse(foreach_to_map_rlist(foreach)(xs)(fopr))
+and foreach_to_map_rlist(foreach: ('xs, 'x0) foreach): ('xs, 'x0, 'y0) map_rlist =
+  fun(xs)(fopr) ->
+    let res = ref([]) in
+    foreach(xs)(fun(x0) -> res := fopr(x0) :: !res); 
+    !res
 ;;(* end of [foreach_to_map_rlist]: let *)
 
 (* ****** ****** *)
 
-let rec
-foreach_to_listize
-( foreach
-: ('xs, 'x0) foreach
-) : ('xs, 'x0) listize =
-fun(xs) ->
-foreach_to_map_list(foreach)(xs)(fun x -> x)
+let rec foreach_to_listize(foreach: ('xs, 'x0) foreach) : ('xs, 'x0) listize =
+  fun(xs) -> foreach_to_map_list(foreach)(xs)(fun x -> x)
 
-let rec
-foreach_to_rlistize
-( foreach
-: ('xs, 'x0) foreach
-) : ('xs, 'x0) rlistize =
-fun(xs) ->
-foreach_to_map_rlist(foreach)(xs)(fun x -> x)
+let rec foreach_to_rlistize(foreach: ('xs, 'x0) foreach) : ('xs, 'x0) rlistize =
+  fun(xs) -> foreach_to_map_rlist(foreach)(xs)(fun x -> x)
 
 (* ****** ****** *)
 
-let rec
-foreach_to_arrnize
-( foreach
-: ('xs, 'x0) foreach
-) : ('xs, 'x0) arrnize =
-(
- fun xs ->
- list_arrnize(foreach_to_listize(foreach)(xs)))
+let rec foreach_to_arrnize(foreach: ('xs, 'x0) foreach) : ('xs, 'x0) arrnize =
+( fun xs ->
+    list_arrnize(foreach_to_listize(foreach)(xs))
+)
 
-let rec
-foreach_to_rarrnize
-( foreach
-: ('xs, 'x0) foreach
-) : ('xs, 'x0) rarrnize =
-(
- fun xs ->
- list_arrnize(foreach_to_rlistize(foreach)(xs)))
+let rec foreach_to_rarrnize(foreach: ('xs, 'x0) foreach) : ('xs, 'x0) rarrnize =
+( fun xs ->
+    list_arrnize(foreach_to_rlistize(foreach)(xs))
+)
 
 (* ****** ****** *)
 
-let rec
-foreach_to_length
-( foreach
-: ('xs, 'x0) foreach): 'xs -> int =
-foldleft_to_length(foreach_to_foldleft(foreach))
-
-and
-foldleft_to_length
-( foldleft
-: ('xs,'x0,'r0) foldleft): 'xs -> int =
-(
-fun(xs) -> foldleft(xs)(0)(fun(r0)(x0) -> r0+1))
+let rec foreach_to_length(foreach: ('xs, 'x0) foreach): 'xs -> int =
+  foldleft_to_length(foreach_to_foldleft(foreach))
+and foldleft_to_length(foldleft: ('xs,'x0,'r0) foldleft): 'xs -> int =
+( fun(xs) -> 
+    foldleft(xs)(0)(fun(r0)(x0) -> r0+1)
+)
 ;;
 (* ****** ****** *)
 
-let
-rforeach_to_foldright
-( rforeach
-: ('xs, 'x0) rforeach)
-: ('xs, 'x0, 'r0) foldright =
-fun
-(xs)(r0)(fopr) ->
-let
-res = ref(r0) in
-rforeach(xs)
-(fun(x0) -> res := fopr(x0)(!res)); !res
+let rforeach_to_foldright(rforeach: ('xs, 'x0) rforeach): ('xs, 'x0, 'r0) foldright =
+  fun(xs)(r0)(fopr) ->
+    let res = ref(r0) in
+    rforeach(xs)(fun(x0) -> res := fopr(x0)(!res)); 
+    !res
 ;;(* end of [rforeach_to_foldright]: let *)
 
 (* ****** ****** *)
 (* ****** ****** *)
 (* ****** ****** *)
 
-let
-int1_forall(n0) =
-foreach_to_forall(int1_foreach)(n0)
+let int1_forall(n0) =
+  foreach_to_forall(int1_foreach)(n0)
 ;;
-let
-string_forall(cs) =
-foreach_to_forall(string_foreach)(cs)
+let string_forall(cs) =
+  foreach_to_forall(string_foreach)(cs)
 ;;
 
 (* ****** ****** *)
 (* ****** ****** *)
 (* ****** ****** *)
 
-let
-int1_listize(n0) =
-foreach_to_listize(int1_foreach)(n0)
-let
-int1_rlistize(n0) =
-foreach_to_rlistize(int1_foreach)(n0)
+let int1_listize(n0) =
+  foreach_to_listize(int1_foreach)(n0)
+let int1_rlistize(n0) =
+  foreach_to_rlistize(int1_foreach)(n0)
 
-let
-string_listize(cs) =
-foreach_to_listize(string_foreach)(cs)
-let
-string_rlistize(cs) =
-foreach_to_rlistize(string_foreach)(cs)
+let string_listize(cs) =
+  foreach_to_listize(string_foreach)(cs)
+let string_rlistize(cs) =
+  foreach_to_rlistize(string_foreach)(cs)
 
 (* ****** ****** *)
 
-let
-int1_foldleft(n0) =
-foreach_to_foldleft(int1_foreach)(n0)
-let
-list_foldleft(xs) =
-foreach_to_foldleft(list_foreach)(xs)
-let
-string_foldleft(cs) =
-foreach_to_foldleft(string_foreach)(cs)
+let int1_foldleft(n0) =
+  foreach_to_foldleft(int1_foreach)(n0)
+let list_foldleft(xs) =
+  foreach_to_foldleft(list_foreach)(xs)
+let string_foldleft(cs) =
+  foreach_to_foldleft(string_foreach)(cs)
 ;;
-let
-int1_foldright(n0) =
-rforeach_to_foldright(int1_rforeach)(n0)
-let
-list_foldright(xs) =
-rforeach_to_foldright(list_rforeach)(xs)
-let
-string_foldright(cs) =
-rforeach_to_foldright(string_rforeach)(cs)
+let int1_foldright(n0) =
+  rforeach_to_foldright(int1_rforeach)(n0)
+let list_foldright(xs) =
+  rforeach_to_foldright(list_rforeach)(xs)
+let string_foldright(cs) =
+  rforeach_to_foldright(string_rforeach)(cs)
 ;;
 
 (* ****** ****** *)
@@ -432,102 +329,60 @@ foreach_to_rlistize(foreach)(xs) in
 (* ****** ****** *)
 (* ****** ****** *)
 
-let
-list_make_fwork
-( fwork
-: ('x0 -> unit) -> unit): 'x0 list =
-let
-res = ref([]) in
-let
-work(x0) = (res := (x0 :: !res))
-in(*let*)
-  ( fwork(work); list_reverse(!res) )
+let list_make_fwork(fwork: ('x0 -> unit) -> unit): 'x0 list =
+  let res = ref([]) in
+  let work(x0) = 
+    (res := (x0 :: !res)) 
+  in(*let*)
+  (fwork(work); list_reverse(!res))
 ;;
-let
-list_make_filter
-( test: 'x0 -> bool)
-( fwork
-: ('x0 -> unit) -> unit): 'x0 list =
-let
-res = ref([]) in
-let
-work(x0) =
-if
-test(x0) then (res := (x0 :: !res))
-in(*let*)
-  ( fwork(work); list_reverse(!res) )
+let list_make_filter( test: 'x0 -> bool)(fwork: ('x0 -> unit) -> unit): 'x0 list =
+  let res = ref([]) in
+  let work(x0) =
+    if test(x0) then (res := (x0 :: !res))
+  in(*let*)
+  (fwork(work); list_reverse(!res) )
 ;;
-let
-list_rmake_fwork
-( fwork
-: ('x0 -> unit) -> unit): 'x0 list =
-let
-res = ref([]) in
-let
-work(x0) =
-(res := (x0 :: !res)) in (fwork(work); !res)
+let list_rmake_fwork(fwork: ('x0 -> unit) -> unit): 'x0 list =
+  let res = ref([]) in
+  let work(x0) =
+    (res := (x0 :: !res)) 
+  in 
+  (fwork(work); !res)
 ;;
-let
-list_rmake_filter
-( test: 'x0 -> bool)
-( fwork
-: ('x0 -> unit) -> unit): 'x0 list =
-let
-res = ref([]) in
-let
-work(x0) =
-if
-test(x0) then
-(res := (x0 :: !res)) in (fwork(work); !res)
+let list_rmake_filter(test: 'x0 -> bool)(fwork: ('x0 -> unit) -> unit): 'x0 list =
+  let res = ref([]) in
+  let work(x0) =
+    if test(x0) then 
+      (res := (x0 :: !res)) 
+  in 
+  (fwork(work); !res)
 ;;
 (* ****** ****** *)
 
-let
-string_make_fwork
-( fwork
-: (char -> unit) -> unit): string =
-let xs =
-Array.of_list(list_make_fwork(fwork)) in
-String.init (Array.length(xs)) (fun i -> xs.(i))
+let string_make_fwork( fwork: (char -> unit) -> unit): string =
+  let xs =  Array.of_list(list_make_fwork(fwork)) in
+  String.init (Array.length(xs)) (fun i -> xs.(i))
 ;;
-let
-string_rmake_fwork
-( fwork
-: (char -> unit) -> unit): string =
-let xs =
-Array.of_list(list_rmake_fwork(fwork)) in
-String.init (Array.length(xs)) (fun i -> xs.(i))
+let string_rmake_fwork(fwork: (char -> unit) -> unit): string =
+  let xs = Array.of_list(list_rmake_fwork(fwork)) in
+  String.init (Array.length(xs)) (fun i -> xs.(i))
 ;;
 (* ****** ****** *)
 (* ****** ****** *)
 (* ****** ****** *)
 
-let
-list_append
-(xs: 'a list)
-(ys: 'a list): 'a list =
-list_make_fwork
-(
-fun work ->
-(list_foreach xs work; list_foreach ys work))
+let list_append(xs: 'a list)(ys: 'a list): 'a list =
+  list_make_fwork(fun work -> (list_foreach xs work; list_foreach ys work))
 ;;
-let
-list_concat
-(xss: 'a list list): 'a list =
-list_make_fwork
-(
-fun work ->
-list_foreach xss (fun xs -> list_foreach xs work))
+let list_concat(xss: 'a list list): 'a list =
+  list_make_fwork(fun work -> list_foreach xss (fun xs -> list_foreach xs work))
 ;;
 (* ****** ****** *)
 
 let
-string_concat_list
-  (css: string list): string =
-string_make_fwork
-(
-fun work ->
-list_foreach css (fun cs -> string_foreach cs work))
+string_concat_list(css: string list): string =
+  string_make_fwork(fun work -> list_foreach css (fun cs -> string_foreach cs work))
 ;;
 (* ****** ****** *)
 
