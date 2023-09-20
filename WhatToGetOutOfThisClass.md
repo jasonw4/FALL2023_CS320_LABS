@@ -1,5 +1,5 @@
 #### The Reality ####
-In reality, <1% of you guys are ever going to touch a functional programming language (Haskell, OCaml, Scala, etc).
+In reality, <1% of you guys are ever going to touch a functional programming language (Haskell, OCaml, Scala, etc) again.
 There are jobs that require the knowledge of knowing a functional programming language as it is a good way to build maintainable, error free code. It is actually used in some scenarios, particularly for building backend systems. Can be found in fintech, finance, telecommunications,
 robotics, aerospace, etc...
 However, if you aren't going to be working in those niche jobs, and you are wondering if you will actually need anything that you learn in this class, here are the key takeaways for the semester:
