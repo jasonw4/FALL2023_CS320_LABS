@@ -19,6 +19,9 @@ string_get_at(cs:string)(i0:int): char =
   String.get cs i0
 ;;
 
+let
+string_init = String.init;;
+
 let foreach_to_foldleft(foreach: ('xs, 'x0) foreach): 'xs -> 'r0 -> ('r0 -> 'x0 -> 'r0) -> 'r0 =
   fun (xs)(r0)(fopr) -> 
     let res = ref(r0) in
@@ -55,6 +58,9 @@ let rec list_revapp(xs: 'a list)(ys: 'a list): 'a list =
 let list_reverse(xs: 'a list): 'a list = 
   list_revapp(xs)([])
 
+let string_foreach(cs: string)(work: char -> unit) =
+  int1_foreach(string_length(cs))(fun i0 -> work(string_get_at(cs)(i0)))
+
 let list_make_fwork(fwork: ('x0 -> unit) -> unit): 'x0 list =
   let res = ref([]) in
   let work(x0) = 
@@ -65,6 +71,13 @@ let list_make_fwork(fwork: ('x0 -> unit) -> unit): 'x0 list =
 let string_make_fwork( fwork: (char -> unit) -> unit): string =
   let xs =  Array.of_list(list_make_fwork(fwork)) in
   String.init (Array.length(xs)) (fun i -> xs.(i))
+
+let string_foldleft(cs) =
+  foreach_to_foldleft(string_foreach)(cs)
+
+let string_cons(c0: char)(cs: string): string =
+  string_init(string_length(cs) + 1)(fun i -> if i <= 0 then c0 else string_get_at cs (i-1))
+;;
 ;;
 (* end of types and functions *)
 
@@ -93,7 +106,7 @@ let stringBuild = string_make_fwork(fun(work) -> work('a'); work('b'); work('c')
    to build it, while String.init's lambda function takes in an index for which you specify what you want at it.
 *)
 (* A more complex example ...*)
-let adder(xs: string): string = 
+let string_rev_fwork(xs: string): string = 
   let len = string_length(xs) in
   let rec index(ind: int)(work): unit = 
     if ind >= 0  then
@@ -145,5 +158,12 @@ let comp = int1_foldleft(5)(0)(fun(r0)(x0) -> r0 + x0 * int1_foldright(x0)(0)(fu
     return r0
 *)
 
+(* string_foldleft has a similar concept, but it iterates through a string rather than a range of ints *)
+(* Use `string_foldleft` to implement a function that reverses a string. *)
+let string_reverse(cs: string): string = 
+  string_foldleft(cs)("") (fun(r0)(x0) ->  string_cons(x0)(r0))
 
-
+(* So, we implemented string_reverse in 2 completely different manners during this lab - one with string_make_fwork 
+   and one with string_foldleft. This shows you how versatile high order functions are and how they can be treated 
+   as building blocks/puzzle pieces that you can string together to achieve what you want.
+   *)
