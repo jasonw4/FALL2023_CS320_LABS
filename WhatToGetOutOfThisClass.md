@@ -2,8 +2,8 @@
 In reality, <1% of you guys are ever going to touch a functional programming language (Haskell, OCaml, Scala, etc) again.
 There are jobs that require the knowledge of knowing a functional programming language as it is a good way to build maintainable, error free code. It is actually used in some scenarios, particularly for building backend systems. Can be found in fintech, finance, telecommunications,
 robotics, aerospace, etc...
-However, if you aren't going to be working in those niche jobs, and you are wondering if you will actually need anything that you learn in this class, here are the key takeaways for the semester:
-
+However, if you aren't going to be working in those niche jobs, and you are wondering if you will actually need anything that you learn in this class, here are the main topics of functional programming that can be applied elsewhere/more practically:
+(Hopefully if anything, these are some concepts that will stick with you after the semester is over)
 #### Recursion ####
 Recursion is a powerful tool, and exists in object oriented languages, imperative languages, functional languages, etc...
 Most commonly, recursive algorithms can be seen in DSA concepts (Graph Traversals, Tree Traversals, Binary Search, Quicksort, Mergesort, etc). It also exists in fields such as Machine Learning, Computer Vision, and databases.
