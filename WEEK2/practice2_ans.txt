@@ -1,0 +1,13 @@
+1) 
+let no_triplets s = 
+  let len = string_length s in
+  let rec aux1 i = 
+    int1_forall (len - i - 1) (fun j -> aux2 i (j + 1))
+  and aux2 i j = 
+    int1_forall (len - i - j - 1) (fun k -> aux3 i j (k + 1))
+  and aux3 i j k = 
+    let c1 = string_get_at s i
+    and c2 = string_get_at s (i + j)
+    and c3 = string_get_at s (i + j + k)
+    in not(c1 = c2 && c1 = c3 && c2 = c3)
+  in int1_forall len (fun i -> aux1 i)

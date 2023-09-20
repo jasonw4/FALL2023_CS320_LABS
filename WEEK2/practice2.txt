@@ -1,0 +1,2 @@
+1) Write a function named no_triplets that checks to make sure that there are no triplets in a given string. 
+    This means that 3 of the same character should not exist. So no_triplets("aaa") is FALSE since there are 3 "a"s in the string.
