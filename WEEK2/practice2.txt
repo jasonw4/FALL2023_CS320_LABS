@@ -1,2 +1,24 @@
 1) Write a function named no_triplets that checks to make sure that there are no triplets in a given string. 
     This means that 3 of the same character should not exist. So no_triplets("aaa") is FALSE since there are 3 "a"s in the string.
+
+2) string_rmake_fwork is defined as follows:
+        let string_rmake_fwork(fwork: (char -> unit) -> unit): string =
+            let xs = Array.of_list(list_rmake_fwork(fwork)) in
+            String.init (Array.length(xs)) (fun i -> xs.(i))
+        ;;
+    What is the difference between this function and string_make_fwork?
+
+3) Here's another function defined in the library:
+        let string_concat_list(css: string list): string =
+            string_make_fwork(fun work -> list_foreach css (fun cs -> string_foreach cs work))
+        ;;
+    What does this do?
+    Suppose css = ["h";"e";"l";"l";"o"] . What is the output of string_concat_list(css)?
+
+4) Lets look at some list functions:
+        let list_append(xs: 'a list)(ys: 'a list): 'a list =
+            list_make_fwork(fun work -> (list_foreach xs work; list_foreach ys work))
+
+        let list_concat(xss: 'a list list): 'a list =
+            list_make_fwork(fun work -> list_foreach xss (fun xs -> list_foreach xs work))
+    What is the difference between these two functions? When should you use one vs the other?

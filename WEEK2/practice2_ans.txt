@@ -11,3 +11,15 @@ let no_triplets s =
     and c3 = string_get_at s (i + j + k)
     in not(c1 = c2 && c1 = c3 && c2 = c3)
   in int1_forall len (fun i -> aux1 i)
+
+2) While string_make_fwork will build your string from left to right, string_rmake_fwork builds
+  your string from right to left.
+
+3) As the name suggests , string_concat_list concatonates the strings in the given list into a single string.
+  Therefore, the output of the given example is "hello".
+
+4) List_append takes 2 separate lists and appends them together. For example, list_append([1;2;3])([4;5;6])
+  would result in [1; 2; 3; 4; 5; 6]. 
+  List_concat reduces a 2D list into a 1-D list. Therefore, list_concat([[1;2;3];[4;5;6]]) would result in 
+  [1; 2; 3; 4; 5; 6]. 
+  As you can see, there is a fundamental difference although the output is equivalent.
