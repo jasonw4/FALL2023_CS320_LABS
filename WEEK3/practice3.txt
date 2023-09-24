@@ -1,0 +1,10 @@
+1) Please implement a function that converts a given
+mylist 'xs' into another mylist 'ys' by removing the
+constructor 'MyReverse':
+//
+let rec mylist_remove_reverse(xs: 'a mylist): 'a mylist
+//
+In particular, your implementation should guarantee:
+1. 'xs' and 'ys' represent the same list
+2. 'ys' does NOT make any use of 'MyReverse'
+3. 'xs' and 'ys' use the same number of 'MyAppend2'

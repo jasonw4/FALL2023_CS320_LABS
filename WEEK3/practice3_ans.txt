@@ -1,0 +1,22 @@
+1)
+let rec mylist_remove_reverse(xs: 'a mylist): 'a mylist = 
+    match xs with 
+    MyNil => xs
+    |
+    MyCons(x1, xs) => MyCons(x1, mylist_remove_reverse(xs))
+    |
+    MySnoc(xs, x1) => MySnoc(mylist_remove_reverse(xs), x1)
+    |
+    MyAppend2(xs, ys) => MyAppend2(mylist_remove_reverse(xs), mylist_remove_reverse(ys))
+    |
+    MyReverse(xs) => 
+        match xs with 
+        MyNil => xs
+        |
+        MyCons(x1, xs) => MySnoc(mylist_remove_reverse(xs), x1)
+        |
+        MySnoc(xs, x1) => MyCons(x1, mylist_remove_reverse(xs))
+        |
+        MyAppend2(xs, ys) => MyAppend2(mylist_remove_reverse(ys), mylist_remove_reverse(xs))
+        |
+        MyReverse(xs) => mylist_remove_reverse(xs)
