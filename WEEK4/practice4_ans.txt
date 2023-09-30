@@ -1,0 +1,20 @@
+1)
+type 'a stream = unit -> 'a * 'a stream
+
+let the_ln2_stream: float stream = fun() => 
+    let rec streamer(currNum: float, sum: float, sign: float): float stream = fun() =>
+        let nextNum = sign /. currNum in
+        let summ = sum +. nextNum in
+        strcon_cons(summ, streamer(currNum +. 1.0, summ, -.sign))
+    in 
+        strcon_cons(1.0, streamer(2.0, 1.0, -.1.0))
+
+2) Lazy evaluation allows a program to become more efficient by avoiding unnecessary computations. 
+For example, if we have a function that takes in a list and returns the first element of the list, 
+we can use lazy evaluation to avoid computing the rest of the list. 
+In this way, we don't have to worry about the runtime stack being overflooded with unneeded computations, especially if 
+the input is large.
+
+3) Streams, unlike lists, take advantage of lazy evaluation. In this manner, they only compute necessary values. While lists attempt to
+compute all values at once, streams only compute values when they are needed. In theory, streams can thus be infinite, generating values
+that can not be done by a finite list.
