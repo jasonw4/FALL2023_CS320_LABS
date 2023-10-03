@@ -386,4 +386,13 @@ string_concat_list(css: string list): string =
 ;;
 (* ****** ****** *)
 
+type 'a strcon =
+  StrNil
+| StrCons of
+  'a * (unit -> 'a strcon)
+
+(* ****** ****** *)
+
+type 'a stream =
+unit -> 'a strcon (* thunk *)
 (* end of [CS320-2023-Fall-classlib-MyOCaml.ml] *)
