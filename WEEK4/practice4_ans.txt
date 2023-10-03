@@ -1,8 +1,8 @@
 1)
 type 'a stream = unit -> 'a * 'a stream
 
-let the_ln2_stream: float stream = fun() => 
-    let rec streamer(currNum: float, sum: float, sign: float): float stream = fun() =>
+let the_ln2_stream: float stream = fun() ->
+    let rec streamer(currNum: float, sum: float, sign: float): float stream = fun() ->
         let nextNum = sign /. currNum in
         let summ = sum +. nextNum in
         strcon_cons(summ, streamer(currNum +. 1.0, summ, -.sign))
