@@ -395,4 +395,32 @@ type 'a strcon =
 
 type 'a stream =
 unit -> 'a strcon (* thunk *)
+
+let rec stream_map(fxs: 'a stream)(fopr: 'a -> 'b): 'b stream = fun () ->
+  match fxs() with
+  |
+  StrNil -> StrNil
+  |
+  StrCons(x1, fxs) -> StrCons(fopr(x1), stream_map(fxs)(fopr))
+;;
+(* ****** ****** *)
+
+let rec
+stream_foreach(fxs: 'a stream)(work: 'a -> unit): unit =
+  match fxs() with
+  | StrNil -> ()
+  | StrCons(x1, fxs) -> (work(x1); stream_foreach(fxs)(work))
+;;
+(* ****** ****** *)
+
+let
+int1_map_stream(n0: int)(fopr: int -> 'a): 'a stream =
+  let rec helper(i: int) = fun () ->
+    if i >= n0 
+      then StrNil(*void*)
+    else 
+      StrCons(fopr(i), helper(i+1)) 
+  in 
+  helper(0)
+
 (* end of [CS320-2023-Fall-classlib-MyOCaml.ml] *)
